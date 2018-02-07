@@ -68,6 +68,8 @@ public final class AsyncHttpClientConfigDefaults {
   public static final String SHUTDOWN_QUIET_PERIOD_CONFIG = "shutdownQuietPeriod";
   public static final String SHUTDOWN_TIMEOUT_CONFIG = "shutdownTimeout";
   public static final String USE_NATIVE_TRANSPORT_CONFIG = "useNativeTransport";
+  public static final String NATIVE_EVENT_LOOP_GROUP_CLASS_NAME = "nativeEventLoopGroupClassName";
+  public static final String NATIVE_EVENT_SOCKET_CHANNEL_FACTORY_CLASS_NAME = "nativeSocketChannelFactoryClassName";
   public static final String IO_THREADS_COUNT_CONFIG = "ioThreadsCount";
 
   public static final String AHC_VERSION;
@@ -279,6 +281,14 @@ public final class AsyncHttpClientConfigDefaults {
 
   public static boolean defaultUseNativeTransport() {
     return AsyncHttpClientConfigHelper.getAsyncHttpClientConfig().getBoolean(ASYNC_CLIENT_CONFIG_ROOT + USE_NATIVE_TRANSPORT_CONFIG);
+  }
+
+  public static String defaultNativeEventLoopGroupClassName() {
+    return AsyncHttpClientConfigHelper.getAsyncHttpClientConfig().getString(ASYNC_CLIENT_CONFIG_ROOT + NATIVE_EVENT_LOOP_GROUP_CLASS_NAME);
+  }
+
+  public static String defaultNativeSocketChannelFactoryClassName() {
+    return AsyncHttpClientConfigHelper.getAsyncHttpClientConfig().getString(ASYNC_CLIENT_CONFIG_ROOT + NATIVE_EVENT_SOCKET_CHANNEL_FACTORY_CLASS_NAME);
   }
 
   public static int defaultIoThreadsCount() {

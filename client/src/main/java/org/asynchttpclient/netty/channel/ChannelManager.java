@@ -123,8 +123,8 @@ public class ChannelManager {
     ChannelFactory<? extends Channel> channelFactory;
     if (allowReleaseEventLoopGroup) {
       if (config.isUseNativeTransport()) {
-        eventLoopGroup = newEpollEventLoopGroup(config.getIoThreadsCount(), threadFactory);
-        channelFactory = getEpollSocketChannelFactory();
+        eventLoopGroup = newNativeEventLoopGroup(config.getIoThreadsCount(), threadFactory, config);
+        channelFactory = getNativeSocketChannelFactory(config);
 
       } else {
         eventLoopGroup = new NioEventLoopGroup(config.getIoThreadsCount(), threadFactory);
@@ -139,7 +139,7 @@ public class ChannelManager {
       if (eventLoopGroup instanceof NioEventLoopGroup) {
         channelFactory = NioSocketChannelFactory.INSTANCE;
       } else {
-        channelFactory = getEpollSocketChannelFactory();
+        channelFactory = getNativeSocketChannelFactory(config);
       }
     }
 
@@ -185,19 +185,19 @@ public class ChannelManager {
     return bootstrap;
   }
 
-  private EventLoopGroup newEpollEventLoopGroup(int ioThreadsCount, ThreadFactory threadFactory) {
+  private EventLoopGroup newNativeEventLoopGroup(int ioThreadsCount, ThreadFactory threadFactory, AsyncHttpClientConfig config) {
     try {
-      Class<?> epollEventLoopGroupClass = Class.forName("io.netty.channel.epoll.EpollEventLoopGroup");
-      return (EventLoopGroup) epollEventLoopGroupClass.getConstructor(int.class, ThreadFactory.class).newInstance(ioThreadsCount, threadFactory);
+      Class<?> customEventLoopGroupClass = Class.forName(config.getNativeEventLoopGroupClassName());
+      return (EventLoopGroup) customEventLoopGroupClass.getConstructor(int.class, ThreadFactory.class).newInstance(ioThreadsCount, threadFactory);
     } catch (Exception e) {
       throw new IllegalArgumentException(e);
     }
   }
 
   @SuppressWarnings("unchecked")
-  private ChannelFactory<? extends Channel> getEpollSocketChannelFactory() {
+  private ChannelFactory<? extends Channel> getNativeSocketChannelFactory(AsyncHttpClientConfig config) {
     try {
-      return (ChannelFactory<? extends Channel>) Class.forName("org.asynchttpclient.netty.channel.EpollSocketChannelFactory").newInstance();
+      return (ChannelFactory<? extends Channel>) Class.forName(config.getNativeSocketChannelFactoryClassName()).newInstance();
     } catch (Exception e) {
       throw new IllegalArgumentException(e);
     }

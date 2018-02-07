@@ -317,6 +317,10 @@ public interface AsyncHttpClientConfig {
 
   int getIoThreadsCount();
 
+  String getNativeEventLoopGroupClassName();
+
+  String getNativeSocketChannelFactoryClassName();
+
   enum ResponseBodyPartFactory {
 
     EAGER {

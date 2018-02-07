@@ -117,6 +117,8 @@ public class DefaultAsyncHttpClientConfig implements AsyncHttpClientConfig {
   private final Map<ChannelOption<Object>, Object> channelOptions;
   private final EventLoopGroup eventLoopGroup;
   private final boolean useNativeTransport;
+  private final String nativeEventLoopGroupClassName;
+  private final String nativeSocketChannelFactoryClassName;
   private final ByteBufAllocator allocator;
   private final boolean tcpNoDelay;
   private final boolean soReuseAddress;
@@ -204,6 +206,8 @@ public class DefaultAsyncHttpClientConfig implements AsyncHttpClientConfig {
                                        Map<ChannelOption<Object>, Object> channelOptions,
                                        EventLoopGroup eventLoopGroup,
                                        boolean useNativeTransport,
+                                       String nativeEventLoopGroupClassName,
+                                       String nativeSocketChannelFactoryClassName,
                                        ByteBufAllocator allocator,
                                        Timer nettyTimer,
                                        ThreadFactory threadFactory,
@@ -288,6 +292,8 @@ public class DefaultAsyncHttpClientConfig implements AsyncHttpClientConfig {
     this.channelOptions = channelOptions;
     this.eventLoopGroup = eventLoopGroup;
     this.useNativeTransport = useNativeTransport;
+    this.nativeEventLoopGroupClassName = nativeEventLoopGroupClassName;
+    this.nativeSocketChannelFactoryClassName = nativeSocketChannelFactoryClassName;
     this.allocator = allocator;
     this.nettyTimer = nettyTimer;
     this.threadFactory = threadFactory;
@@ -607,6 +613,16 @@ public class DefaultAsyncHttpClientConfig implements AsyncHttpClientConfig {
   }
 
   @Override
+  public String getNativeEventLoopGroupClassName() {
+    return nativeEventLoopGroupClassName;
+  }
+
+  @Override
+  public String getNativeSocketChannelFactoryClassName() {
+    return nativeSocketChannelFactoryClassName;
+  }
+
+  @Override
   public ByteBufAllocator getAllocator() {
     return allocator;
   }
@@ -721,6 +737,8 @@ public class DefaultAsyncHttpClientConfig implements AsyncHttpClientConfig {
     private int httpClientCodecInitialBufferSize = defaultHttpClientCodecInitialBufferSize();
     private int chunkedFileChunkSize = defaultChunkedFileChunkSize();
     private boolean useNativeTransport = defaultUseNativeTransport();
+    private String nativeEventLoopGroupClassName = defaultNativeEventLoopGroupClassName();
+    private String nativeSocketChannelFactoryClassName = defaultNativeSocketChannelFactoryClassName();
     private ByteBufAllocator allocator;
     private Map<ChannelOption<Object>, Object> channelOptions = new HashMap<>();
     private EventLoopGroup eventLoopGroup;
@@ -1265,6 +1283,8 @@ public class DefaultAsyncHttpClientConfig implements AsyncHttpClientConfig {
               channelOptions.isEmpty() ? Collections.emptyMap() : Collections.unmodifiableMap(channelOptions),
               eventLoopGroup,
               useNativeTransport,
+              nativeEventLoopGroupClassName,
+              nativeSocketChannelFactoryClassName,
               allocator,
               nettyTimer,
               threadFactory,

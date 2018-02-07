@@ -304,6 +304,16 @@ public class AsyncHttpClientTypesafeConfig implements AsyncHttpClientConfig {
   }
 
   @Override
+  public String getNativeEventLoopGroupClassName() {
+    return getStringOpt(NATIVE_EVENT_LOOP_GROUP_CLASS_NAME).orElse(defaultNativeEventLoopGroupClassName());
+  }
+
+  @Override
+  public String getNativeSocketChannelFactoryClassName() {
+    return getStringOpt(NATIVE_EVENT_SOCKET_CHANNEL_FACTORY_CLASS_NAME).orElse(defaultNativeSocketChannelFactoryClassName());
+  }
+
+  @Override
   public Consumer<Channel> getHttpAdditionalChannelInitializer() {
     return null;
   }
